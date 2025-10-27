@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Flashlay.Core/Flashlay.Core.csproj" />
+    <Project Path="src/Flashlay.Console/Flashlay.Console.csproj" />
+  </Folder>
+</Solution>
