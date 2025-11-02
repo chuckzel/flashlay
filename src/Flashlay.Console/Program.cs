@@ -1,4 +1,6 @@
 ﻿using Flashlay.Core;
+using QuestPDF.Companion;
+using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 
 Console.WriteLine("Hello, World!");
@@ -6,16 +8,17 @@ Console.WriteLine("Hello, World!");
 var cardSet = new CardSet
 {
     Flashcards = [
-        Flashcard.FromRasterBytes(Placeholders.Image(100, 100)),
-        Flashcard.FromRasterBytes(Placeholders.Image(400, 600)),
-        Flashcard.FromRasterBytes(Placeholders.Image(600, 400)),
-        Flashcard.FromRasterBytes(Placeholders.Image(100, 800)),
-        Flashcard.FromRasterBytes(Placeholders.Image(10, 2)),
-        Flashcard.FromRasterBytes(Placeholders.Image(1, 20)),
+        Flashcard.FromRasterFile(@"t:\My Drive\teaching\kindergarten\flashcard pictures\snowflake.png"),
+        Flashcard.FromSvgFile(@"t:\My Drive\teaching\kindergarten\flashcard pictures\horse.svg"),
+        Flashcard.FromSvgFile(@"t:\My Drive\teaching\kindergarten\flashcard pictures\gingerbread.svg")
+            .WithCustomCellStyle(c => c.Padding(40)),
+        Flashcard.FromSvgFile(@"t:\My Drive\teaching\kindergarten\flashcard pictures\goose.svg"),
+        Flashcard.FromSvgFile(@"t:\My Drive\teaching\kindergarten\flashcard pictures\bird.svg")
+            .WithCustomCellStyle(c => c.Padding(20)),
     ],
-    GridColumns = 2,
-    GridRows = 3
+    GridColumns = 1,
+    GridRows = 2
 };
 
 var pdfGenerator = new FlashcardPdfGenerator();
-pdfGenerator.GeneratePdf(cardSet);
+pdfGenerator.GeneratePdf(cardSet).GeneratePdf(@"t:\My Drive\teaching\kindergarten\flashcards.pdf");

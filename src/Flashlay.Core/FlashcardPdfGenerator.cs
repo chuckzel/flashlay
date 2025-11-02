@@ -7,16 +7,21 @@ namespace Flashlay.Core;
 
 public class FlashcardPdfGenerator
 {
-    public void GeneratePdf(CardSet cardSet)
+    public FlashcardPdfGenerator(LicenseType licenseType = LicenseType.Community)
     {
-        QuestPDF.Settings.License = LicenseType.Community;
-        Document.Create(container =>
+        QuestPDF.Settings.License = licenseType;
+    }
+
+    public IDocument GeneratePdf(CardSet cardSet)
+    {
+        return Document.Create(container =>
         {
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
-                float cellHeight = PageSizes.A4.Height / cardSet.GridRows;
-                page.Content().AlignCenter().AlignMiddle().Table(table =>
+                page.MarginBottom(20); //todo - make configurable
+                float cellHeight = PageSizes.A4.Height / cardSet.GridRows - 20;
+                page.Content().AlignCenter().Table(table =>
                 {
                     IContainer CellStyle(IContainer container)
                     {
@@ -37,13 +42,21 @@ public class FlashcardPdfGenerator
 
                     for (int i = 0; i < cardSet.Flashcards.Count; i++)
                     {
-                        var currFlashcard = (RasterFlashcard)cardSet.Flashcards[i];
-                        table.Cell().Element(CellStyle)
-                            .Image(currFlashcard.Image)
-                            .FitArea();
+                        var currFlashcard = cardSet.Flashcards[i];
+                        var cell = table.Cell().Element(CellStyle).Element(currFlashcard.CustomCellStyle);
+                        
+                        switch (currFlashcard)
+                        {
+                            case RasterFlashcard rasterFlashcard:
+                                cell.Image(rasterFlashcard.Image).FitArea();
+                                break;
+                            case SvgFlashcard svgFlashcard:
+                                cell.Svg(svgFlashcard.Image).FitArea();
+                                break;
+                        }
                     }
                 });
             });
-        }).ShowInCompanion();
+        });
     }
 }
