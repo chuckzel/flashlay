@@ -19,31 +19,29 @@ public class FlashcardPdfGenerator
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
-                page.MarginBottom(20); //todo - make configurable
-                float cellHeight = PageSizes.A4.Height / cardSet.GridRows - 20;
+                float margin = 20; // todo: make configurable
+                float marginBottom = 0;
+                page.Margin(margin);
+                page.MarginBottom(marginBottom);
                 page.Content().AlignCenter().Table(table =>
                 {
-                    IContainer CellStyle(IContainer container)
+                    static IContainer CellStyle(IContainer container)
                     {
                         return container
-                            .Height(cellHeight)
                             .Border(1, Colors.Grey.Lighten5)
                             .AlignMiddle()
                             .AlignCenter();
                     }
 
-                    table.ColumnsDefinition(columns =>
-                    {
-                        for (int i = 0; i < cardSet.GridColumns; i++)
-                        {
-                            columns.RelativeColumn();
-                        }
-                    });
+                    table.ColumnsDefinition(cardSet.ColumnsDefinition);
 
                     for (int i = 0; i < cardSet.Flashcards.Count; i++)
                     {
                         var currFlashcard = cardSet.Flashcards[i];
-                        var cell = table.Cell().Element(CellStyle).Element(currFlashcard.CustomCellStyle);
+                        var cell = table.Cell()
+                            .Element(CellStyle)
+                            .Element(cardSet.CellStyle)
+                            .Element(currFlashcard.CustomCellStyle);
                         
                         switch (currFlashcard)
                         {
