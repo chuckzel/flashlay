@@ -24,7 +24,7 @@ public class FlashcardPdfGenerator
                 {
                     foreach (var cardSet in cardCollection.CardSets)
                     {
-                        col.Item().Table(table =>
+                        col.Item().AlignCenter().Table(table =>
                         {
                             static IContainer CellStyle(IContainer container)
                             {
